@@ -1,8 +1,5 @@
 # %%
 import csv
-from numpy.core.fromnumeric import reshape
-
-from numpy.lib.function_base import copy
 from list_csv import list_csv
 import numpy as np
 
