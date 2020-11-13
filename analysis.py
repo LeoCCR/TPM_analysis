@@ -3,6 +3,7 @@ import csv
 
 from list_csv import list_csv
 import numpy as np
+import numpy.ma as ma
 from scipy.stats import pearsonr
 
 try_path = "/Users/renxmac/Desktop/lane 1-1.csv"
@@ -38,8 +39,11 @@ x_list = np.reshape(x_list, (num_frame, num_aoi))
 y_list = np.array(y_list, copy=False)
 y_list = np.reshape(y_list, (num_frame, num_aoi))
 
+x_list = ma.masked_equal(x_list, 0)
+y_list = ma.masked_equal(y_list, 0)
+
 # %%
-num_fit = np.count_nonzero(x_list, axis=0)
+num_fit = ma.count(x_list, axis=0)
 fit_ratios = np.true_divide(num_fit, num_frame)
 # %%
 column_to_del = [
@@ -51,18 +55,17 @@ column_to_del = [
 x_list = np.delete(x_list, column_to_del, axis=1)
 y_list = np.delete(y_list, column_to_del, axis=1)
 # %%
-x_list[x_list == 0] = np.nan
-y_list[y_list == 0] = np.nan
+
 # %%
 valid_num_aoi = len(x_list[0, :])
-bm_x = [np.nanstd(x_list[:, aoi]) for aoi in range(valid_num_aoi)]
-bm_y = [np.nanstd(y_list[:, aoi]) for aoi in range(valid_num_aoi)]
+bm_x = [ma.std(x_list[:, aoi]) for aoi in range(valid_num_aoi)]
+bm_y = [ma.std(y_list[:, aoi]) for aoi in range(valid_num_aoi)]
 bm_avr = np.array(bm_x)/np.array(bm_y)
 
-corrcoef = [
-    np.ma.corrcoef(x_list[:, aoi], y_list[:, aoi])
-    for aoi in range(valid_num_aoi)
-    ]
+# corrcoef = [
+#    np.ma.corrcoef(x_list[:, aoi], y_list[:, aoi])
+#    for aoi in range(valid_num_aoi)
+#    ]
 
 # %%
-print(corrcoef)
+# print(corrcoef)
