@@ -12,6 +12,7 @@ pixel_size = 71.5
 xy_ratio_max = 1.15
 xy_ratio_min = 0.85
 try_corrcoef = 0.2
+window_size = 40
 
 # %% Extract data from tpm csv file
 aoi_x_frames, x_list, y_list = [], [], []
@@ -97,3 +98,14 @@ x_list = np.delete(x_list, column_delete, axis=1)
 y_list = np.delete(y_list, column_delete, axis=1)
 
 valid_num_aoi = len(x_list[0, :])
+
+# %%
+mov_avg_bm = np.zeros(
+    (num_frame - window_size + 1, valid_num_aoi), dtype=float
+)
+
+for aoi in range(valid_num_aoi):
+    for frame in range(num_frame - window_size + 1):
+        x_mov_avg_bm = np.nanstd(x_list[frame:frame + window_size, aoi])
+        y_mov_avg_bm = np.nanstd(y_list[frame:frame + window_size, aoi])
+        mov_avg_bm[frame, aoi] = np.nanmean((x_mov_avg_bm, y_mov_avg_bm)) * pixel_size

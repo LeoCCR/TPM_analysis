@@ -1,4 +1,5 @@
 # %%
+from operator import le
 import numpy as np
 import numpy.ma as ma
 from random import randrange
@@ -15,9 +16,10 @@ print(y)
 print(abs(np.ma.corrcoef(np.ma.masked_invalid(x), np.ma.masked_invalid(y))[0, 1]))
 
 # %%
-x = ma.masked_equal(x, 1)
-ma.count(x)
-np.sum(x)
-np.average(x)
+x = ma.masked_invalid(x)
+qa = ma.std(x)
 
 # %%
+print(x)
+print(x[0])
+print(qa)
