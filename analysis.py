@@ -1,5 +1,7 @@
 # %%
 import csv
+
+from numpy.lib.function_base import delete
 from list_csv import list_csv
 import numpy as np
 import numpy.ma as ma
@@ -36,6 +38,7 @@ for file_path in try_path:
 num_aoi = aoi_x_frames[-1]
 num_frame = int(len(aoi_x_frames)/num_aoi)
 
+aoi_ids = np.arange(1, num_aoi)
 x_list = np.array(x_list, copy=False)
 x_list = np.reshape(x_list, (num_frame, num_aoi))
 y_list = np.array(y_list, copy=False)
@@ -53,7 +56,8 @@ column_to_del = [
 
 x_list = np.delete(x_list, column_to_del, axis=1)
 y_list = np.delete(y_list, column_to_del, axis=1)
-valid_num_aoi = len(x_list[0, :])
+aoi_ids = np.delete(aoi_ids, column_to_del)
+valid_num_aoi = len(aoi_ids)
 
 # %% replace 0 value with numpy nan veriable.
 
@@ -96,8 +100,9 @@ column_delete = sorted(
 
 x_list = np.delete(x_list, column_delete, axis=1)
 y_list = np.delete(y_list, column_delete, axis=1)
+aoi_ids = np.delete(aoi_ids, column_delete)
 
-valid_num_aoi = len(x_list[0, :])
+valid_num_aoi = len(aoi_ids)
 
 # %%
 mov_avg_bm = np.zeros(
